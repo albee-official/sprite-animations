@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "displayName": "Sprite Animations",
   "description": "Primitive package for handling conventional sprite animations.",
-  "documentationUrl": "https://example.com/",
-  "changelogUrl": "https://example.com/changelog.html",
-  "licensesUrl": "https://example.com/licensing.html",
+  "documentationUrl": "https://github.com/albee-official/sprite-animations/blob/master/README.md",
+  "changelogUrl": "https://github.com/albee-official/sprite-animations/releases",
+  "licensesUrl": "https://github.com/albee-official/sprite-animations/blob/master/LICENSE",
   "dependencies": {
  },
  "keywords": [
