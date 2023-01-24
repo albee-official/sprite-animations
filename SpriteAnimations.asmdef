@@ -1,0 +1,16 @@
+{
+    "name": "SpriteAnimations",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3863140ca94a4d549bea0264e0c6c9f9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
