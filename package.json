@@ -1,6 +1,6 @@
 {
   "name": "com.albee-official.sprite-animations",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Sprite Animations",
   "description": "Primitive package for handling conventional sprite animations.",
   "documentationUrl": "https://github.com/albee-official/sprite-animations/blob/master/README.md",
