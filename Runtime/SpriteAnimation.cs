@@ -110,7 +110,7 @@ namespace SpriteAnimations
 
         public void ResetAnimationFrames() {
             _currentFrameIndex = 0;
-            frames = new SpriteAnimationFrame[];
+            frames = new SpriteAnimationFrame[0];
         }
 
         public void SetAnimationFrames(ISpriteAnimationFrame[] frames) {
