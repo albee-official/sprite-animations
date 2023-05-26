@@ -115,7 +115,12 @@ namespace SpriteAnimations
 
         public void SetAnimationFrames(ISpriteAnimationFrame[] frames) {
             _currentFrameIndex = 0;
-            this.frames = frames;
+            var fr = new SpriteAnimationFrame[frames.Length];
+            for (int i = 0; i < frames.Length; i++) {
+                fr[i] = (SpriteAnimationFrame)frames[i];
+            }
+
+            this.frames = fr;
         }
     }
 }
