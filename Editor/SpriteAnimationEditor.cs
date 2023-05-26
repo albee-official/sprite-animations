@@ -58,7 +58,6 @@ namespace SpriteAnimations.Inspector
         public override void OnPreviewGUI(Rect position, GUIStyle background)
         {
             DrawPlaybackControls();
-            Debug.Log("ASSSS");
 
             if (Sprites.Count == 0) return;
             int index = ShouldPlay

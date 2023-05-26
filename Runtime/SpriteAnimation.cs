@@ -107,5 +107,15 @@ namespace SpriteAnimations
 
             frames = framesList.ToArray();
         }
+
+        public void ResetAnimationFrames() {
+            _currentFrameIndex = 0;
+            frames = new SpriteAnimationFrame[];
+        }
+
+        public void SetAnimationFrames(ISpriteAnimationFrame[] frames) {
+            _currentFrameIndex = 0;
+            this.frames = frames;
+        }
     }
 }
