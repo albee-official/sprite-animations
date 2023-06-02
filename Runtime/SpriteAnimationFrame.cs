@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using SpriteAnimations.Interfaces;
 using SpriteAnimations.Inspector;
+using System.Reflection;
 using UnityEngine;
+using TypeReferences;
+using SpriteAnimations.Actions;
 
 namespace SpriteAnimations
 {
@@ -26,21 +29,29 @@ namespace SpriteAnimations
     public class SpriteAnimationFrame : ISpriteAnimationFrame
     {
         [field: Space(2f)] [SerializeField] protected Sprite sprite;
-        [field: Space(2f)] [SerializeField] protected ESpriteAnimationActions action;
-        [field: Space(2f)] [SerializeField] protected string data;
+        [field: Space(2f)] [SerializeField] protected ESpriteAnimationActions action = ESpriteAnimationActions.NONE;
 
-        public Sprite Sprite { get { return sprite; } }
-        public ESpriteAnimationActions Action { get { return action; } }
-        public string ActionData { get { return data; } }
+        [Inherits(typeof(ISpriteAnimationActionData))]
+        [field: Space(2f)] [SerializeReference] protected TypeReference actionDataType = new TypeReference(typeof(DefaultActionData));
+        [field: Space(2f)] [SerializeReference] protected ISpriteAnimationActionData data = null;
 
-        public SpriteAnimationFrame() {
-        }
+        public Sprite Sprite { get => sprite; }
+        public ESpriteAnimationActions Action { get => action; }
+        public TypeReference ActionDataType { get => actionDataType; }
+        public ISpriteAnimationActionData ActionData { get => data; }
+
+        public SpriteAnimationFrame() { }
 
         public SpriteAnimationFrame(Sprite sprite, ESpriteAnimationActions action = ESpriteAnimationActions.NONE) {
             this.sprite = sprite;
             this.action = action;
+            this.data = (DefaultActionData)Activator.CreateInstance(actionDataType);
         }
-        
+
+        public dynamic CastedActionData() {
+            return Convert.ChangeType(data, actionDataType);
+        }
+
         // [field: Space(2f)] [SerializeField] public event Action onEnter;
         // [field: Space(2f)] [SerializeField] public event Action onLeave;
 

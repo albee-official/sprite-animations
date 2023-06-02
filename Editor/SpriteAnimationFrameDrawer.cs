@@ -3,6 +3,10 @@ using SpriteAnimations;
 using SpriteAnimations.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using TypeReferences;
+using System.Reflection;
+using System;
+using SpriteAnimations.Actions;
 
 namespace SpriteAnimations.Inspector
 {
@@ -13,35 +17,42 @@ namespace SpriteAnimations.Inspector
     [CustomPropertyDrawer(typeof(SpriteAnimationFrame))]
     public class SpriteAnimationFrameDrawer : PropertyDrawer
     {
-        private const float Size = 80;
-        private const float Padding = 12;
-        private const float Spacing = 2;
-        private const float Margin = 2;
-        private const float SpriteHeight = 20;
-        private const float ActionHeight = 20;
-        private const float DataHeight = 20;
+        private const float SIZE = 96;
+        private const float PADDING = 8;
+        private const float SPACING = 2;
+        private const float MARGIN = 4;
+        private const float LEFT_PROPERTY_HEIGHT = 20;
+
         protected virtual IEnumerable<string> PropertiesToDraw => new string[] { };
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            float childPropertiesHeight = PropertiesToDraw.Sum(
-                name => EditorGUI.GetPropertyHeight(property.FindPropertyRelative(name))
-            );
-            return Mathf.Max(childPropertiesHeight + Spacing * 6, Size) + Margin * 2;
+            float sz = EditorGUI.GetPropertyHeight(property, includeChildren: true);
+            // return Mathf.Max(childPropertiesHeight + SPACING * 6, SIZE) + MARGIN * 2;
+            return sz;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-            position.y += Margin;
+            position.y += MARGIN;
             position = DrawPreview(position, property);
 
             SerializedProperty spriteProp = property.FindPropertyRelative("sprite");
             SerializedProperty actionProp = property.FindPropertyRelative("action");
+            SerializedProperty actionDataTypeProp = property.FindPropertyRelative("actionDataType");
             SerializedProperty dataProp = property.FindPropertyRelative("data");
 
+            TypeReference typeRef = actionDataTypeProp.managedReferenceValue as TypeReference;
+            ISpriteAnimationActionData actionData = dataProp.managedReferenceValue as ISpriteAnimationActionData;
+
+            if (typeRef == null || typeRef.ToString() == "None") actionDataTypeProp.managedReferenceValue = new TypeReference(typeof(SpriteAnimations.Actions.DefaultActionData));
+            if (actionData == null || actionData.GetType() != typeRef.Type) {
+                dataProp.managedReferenceValue = Activator.CreateInstance(typeRef);
+                dataProp = property.FindPropertyRelative("data");
+            }
+
             Rect spritePos = DrawSpriteProp(position, spriteProp);
-            DrawActionProp(spritePos, actionProp, dataProp);
-            
+            DrawActionProp(spritePos, actionProp, actionDataTypeProp, dataProp);
 
             EditorGUI.EndProperty();
         }
@@ -49,24 +60,28 @@ namespace SpriteAnimations.Inspector
         protected virtual Rect DrawSpriteProp(Rect position, SerializedProperty property)
         {
             Rect pos = position;
-            pos.y += Padding;
-            pos.height = SpriteHeight;
+            pos.y += PADDING;
+            pos.height = LEFT_PROPERTY_HEIGHT;
             EditorGUI.PropertyField(pos, property);
 
             return pos;
         }
 
-        protected virtual Rect DrawActionProp(Rect position, SerializedProperty actionProp, SerializedProperty dataProp)
+        protected virtual Rect DrawActionProp(Rect position, SerializedProperty actionProp, SerializedProperty actionDataTypeProp, SerializedProperty dataProp)
         {
             Rect pos = position;
-            pos.y += Spacing + SpriteHeight;
-            pos.height = ActionHeight;
+            pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
+            pos.height = LEFT_PROPERTY_HEIGHT;
             EditorGUI.PropertyField(pos, actionProp);
 
             if (actionProp.enumValueIndex == 2) {
-                pos.y += Spacing + ActionHeight;
-                pos.height = DataHeight;
-                EditorGUI.PropertyField(pos, dataProp);
+                pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
+                pos.height = LEFT_PROPERTY_HEIGHT;
+                EditorGUI.PropertyField(pos, actionDataTypeProp, GUIContent.none);
+
+                pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
+                pos.height = LEFT_PROPERTY_HEIGHT;
+                EditorGUI.PropertyField(pos, dataProp, includeChildren: true);
             }
 
             return pos;
@@ -83,11 +98,11 @@ namespace SpriteAnimations.Inspector
             var sprite = spriteProp.objectReferenceValue as Sprite;
             if (sprite == null || position.width < 300) return position;
             var spritePosition = position;
-            spritePosition.width = Size - 2 * Padding;
-            spritePosition.height = Size - 2 * Padding;
-            position.width -= Size;
-            spritePosition.x += position.width + Padding;
-            spritePosition.y += Padding;
+            spritePosition.width = SIZE - 2 * PADDING;
+            spritePosition.height = SIZE - 2 * PADDING;
+            position.width -= SIZE;
+            spritePosition.x += position.width + PADDING;
+            spritePosition.y += PADDING;
             SpriteAnimationEditor.DrawTexturePreview(spritePosition, sprite);
             return position;
         }

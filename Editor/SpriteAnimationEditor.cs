@@ -71,8 +71,10 @@ namespace SpriteAnimations.Inspector
         {
             foreach (var property in _propertiesToDraw)
             {
-                if (property != null)
+                try {
                     EditorGUILayout.PropertyField(property);
+                }
+                catch (System.Exception) { }
             }
         }
 

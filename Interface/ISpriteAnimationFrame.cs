@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using TypeReferences;
+using SpriteAnimations.Actions;
 
 namespace SpriteAnimations.Interfaces
 {   
@@ -12,8 +14,14 @@ namespace SpriteAnimations.Interfaces
         /// <summary> Action that is performed when frame is entered. </summary>
         public ESpriteAnimationActions Action { get; }
 
-        /// <summary> Custom data to pass with onAnimationAction event. </summary>
-        public string ActionData { get; }
+        /// <summary> Action Data Type: </summary>
+        public TypeReference ActionDataType { get; }
+
+        /// <summary> Object data of the frame </summary>
+        public ISpriteAnimationActionData ActionData { get; }
+
+        /// <summary> Tries to cast action data to it's proper type </summary>
+        public dynamic CastedActionData();
         
         // public event Action onEnter;
         // public event Action onLeave;

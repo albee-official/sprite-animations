@@ -258,7 +258,7 @@ namespace SpriteAnimations
                     return true;
 
                 case ESpriteAnimationActions.ACTION:
-                    onAnimationAction?.Invoke(currentAnimation, frame, frame.ActionData);
+                    onAnimationAction?.Invoke(currentAnimation, frame, frame.ActionDataType, frame.ActionData);
                     return true;
             }
             
@@ -275,7 +275,7 @@ namespace SpriteAnimations
 
         // - Events
         public delegate void SpriteAnimationEventHandler(ISpriteAnimation animation, ISpriteAnimationFrame frame);
-        public delegate void SpriteAnimationActionHandler(ISpriteAnimation animation, ISpriteAnimationFrame frame, string data);
+        public delegate void SpriteAnimationActionHandler(ISpriteAnimation animation, ISpriteAnimationFrame frame, Type dataType, object data);
 
         public event SpriteAnimationEventHandler onAnimationEnter;
         public event SpriteAnimationEventHandler onAnimationLeave;
