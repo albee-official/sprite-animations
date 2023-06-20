@@ -19,6 +19,7 @@ namespace SpriteAnimations.Inspector
 
         private void OnEnable() {
             RegisterProperty("_Name");
+            RegisterProperty("pointingRight");
             RegisterProperty("fps");
             RegisterProperty("playbackMode");
             Frames = RegisterProperty("frames");
@@ -28,13 +29,11 @@ namespace SpriteAnimations.Inspector
             return true;
         }
 
-        public override bool RequiresConstantRepaint()
-        {
+        public override bool RequiresConstantRepaint() {
             return FPS > 0 && ShouldPlay;
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             serializedObject.Update();
 
             DrawCustomProperties();

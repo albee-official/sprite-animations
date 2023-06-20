@@ -10,7 +10,6 @@ namespace SpriteAnimations
 {
     /// <summary> Different modes for animator speed behaviour. </summary>
     public enum ESpriteAnimatorPlaybackModes {
-
         /// <summary> Uses constant FPS of the animator </summary>
         CONSTANT_FPS,
 
@@ -18,10 +17,8 @@ namespace SpriteAnimations
         DEFAULT,
     }
 
-
     /// <summary> Different modes for Play(). </summary>
     public enum ESpriteAnimatorPlayMode {
-        
         /// <summary> Waits for current animation frame, then starts playing new animation. </summary>
         DEFAULT,
 
@@ -59,11 +56,11 @@ namespace SpriteAnimations
 
         [field: Space(24f)]
         [field: Header("Debug Info")]
-        [field: Space(6f)] [SerializeField] [ReadOnly] private bool _isPlayingAnimation = false;
-        [field: Space(2f)] [SerializeField] [ReadOnly] private float _lastSpriteUpdateTime = float.MinValue;
-        [field: Space(2f)] [SerializeField] [ReadOnly] private float _frameCheckInterval = 0;
-        [field: Space(2f)] [SerializeField] [ReadOnly] private float _nextFrameDuration = 0;
-        [field: Space(2f)] [SerializeField] [ReadOnly] private SpriteAnimationFrame _currentAnimationFrame;
+        [field: Space(6f)] [SerializeField] [ReadOnly] private bool m_isPlayingAnimation = false;
+        [field: Space(2f)] [SerializeField] [ReadOnly] private float m_lastSpriteUpdateTime = float.MinValue;
+        [field: Space(2f)] [SerializeField] [ReadOnly] private float m_frameCheckInterval = 0;
+        [field: Space(2f)] [SerializeField] [ReadOnly] private float m_nextFrameDuration = 0;
+        [field: Space(2f)] [SerializeField] [ReadOnly] private SpriteAnimationFrame m_currentAnimationFrame;
 
 
         //. Properties
@@ -105,7 +102,7 @@ namespace SpriteAnimations
         /// <summary> Current animation frame, played by animator. </summary>
         public ISpriteAnimationFrame CurrentAnimationFrame {
             get {
-                return _currentAnimationFrame;
+                return m_currentAnimationFrame;
             }
         }
 
@@ -113,6 +110,13 @@ namespace SpriteAnimations
         public ISpriteAnimation[] AnimationQueue {
             get {
                 return animationQueue.ToArray();
+            }
+        }
+
+        /// <summary> SpriteRenderer object that is displaying animation frames. </summary>
+        public SpriteRenderer AnimationTarget {
+            get {
+                return spriteRenderer;
             }
         }
 
@@ -126,14 +130,14 @@ namespace SpriteAnimations
         }
 
         private void Start() {
-            _nextFrameDuration = _frameCheckInterval;
+            m_nextFrameDuration = m_frameCheckInterval;
         }
 
         private void Update() {
-            if (isPaused || !_isPlayingAnimation) return;
+            if (isPaused || !m_isPlayingAnimation) return;
 
-            if (Time.time > _lastSpriteUpdateTime + _nextFrameDuration) {
-                _isPlayingAnimation = NextFrame();
+            if (Time.time > m_lastSpriteUpdateTime + m_nextFrameDuration) {
+                m_isPlayingAnimation = NextFrame();
             }
         }
 
@@ -150,18 +154,18 @@ namespace SpriteAnimations
                 }
             }
 
-            _currentAnimationFrame = (SpriteAnimationFrame)currentAnimation.RequestFrame();
-            if (_currentAnimationFrame == null) {
+            m_currentAnimationFrame = (SpriteAnimationFrame)currentAnimation.RequestFrame();
+            if (m_currentAnimationFrame == null) {
                 currentAnimation = null;
                 return NextFrame();
             }
 
-            spriteRenderer.sprite = _currentAnimationFrame.Sprite;
+            spriteRenderer.sprite = m_currentAnimationFrame.Sprite;
             
-            _lastSpriteUpdateTime = Time.time;
-            _nextFrameDuration = RecalculateFrameCheckInterval();
+            m_lastSpriteUpdateTime = Time.time;
+            m_nextFrameDuration = RecalculateFrameCheckInterval();
             
-            bool handled = HandleAnimationAction(_currentAnimationFrame);
+            bool handled = HandleAnimationAction(m_currentAnimationFrame);
             
             return handled;
         }
@@ -174,7 +178,7 @@ namespace SpriteAnimations
         ///  </remarks>
         public bool Play(ISpriteAnimation animation = null, ESpriteAnimatorPlayMode mode = ESpriteAnimatorPlayMode.DEFAULT) {
             isPaused = false;
-            _isPlayingAnimation = true;
+            m_isPlayingAnimation = true;
             
             if (animation == null) {
                 return false;
@@ -202,7 +206,7 @@ namespace SpriteAnimations
 
                     Queue(anim.NewInstance());
 
-                    _isPlayingAnimation = NextFrame();
+                    m_isPlayingAnimation = NextFrame();
                     return true;
             }
             
@@ -221,7 +225,7 @@ namespace SpriteAnimations
         /// <summary> Skips to the next animation in queue </summary>
         public bool Skip() {
             currentAnimation = null;
-            _isPlayingAnimation = NextFrame();
+            m_isPlayingAnimation = NextFrame();
 
             return true;
         }
@@ -268,8 +272,8 @@ namespace SpriteAnimations
 
         // - Utility Methods
         protected float RecalculateFrameCheckInterval() {
-            _frameCheckInterval = 1 / (AnimatorFPS * animatorSpeedModifier);
-            return _frameCheckInterval;
+            m_frameCheckInterval = 1 / (AnimatorFPS * animatorSpeedModifier);
+            return m_frameCheckInterval;
         }
 
 

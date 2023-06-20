@@ -18,7 +18,7 @@ namespace SpriteAnimations.Interfaces
         public TypeReference ActionDataType { get; }
 
         /// <summary> Object data of the frame </summary>
-        public ISpriteAnimationActionData ActionData { get; }
+        public SpriteAnimationActionData ActionData { get; }
 
         /// <summary> Tries to cast action data to it's proper type </summary>
         public dynamic CastedActionData();

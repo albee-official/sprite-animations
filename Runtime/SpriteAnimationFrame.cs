@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using SpriteAnimations.Interfaces;
-using SpriteAnimations.Inspector;
 using System.Reflection;
 using UnityEngine;
 using TypeReferences;
 using SpriteAnimations.Actions;
+using Painkiller;
 
 namespace SpriteAnimations
 {
@@ -31,14 +31,14 @@ namespace SpriteAnimations
         [field: Space(2f)] [SerializeField] protected Sprite sprite;
         [field: Space(2f)] [SerializeField] protected ESpriteAnimationActions action = ESpriteAnimationActions.NONE;
 
-        [Inherits(typeof(ISpriteAnimationActionData))]
+        [Inherits(typeof(SpriteAnimationActionData))]
         [field: Space(2f)] [SerializeReference] protected TypeReference actionDataType = new TypeReference(typeof(DefaultActionData));
-        [field: Space(2f)] [SerializeReference] protected ISpriteAnimationActionData data = null;
+        [field: Space(2f)] [SerializeReference] protected SpriteAnimationActionData data = null;
 
         public Sprite Sprite { get => sprite; }
         public ESpriteAnimationActions Action { get => action; }
         public TypeReference ActionDataType { get => actionDataType; }
-        public ISpriteAnimationActionData ActionData { get => data; }
+        public SpriteAnimationActionData ActionData { get => data; }
 
         public SpriteAnimationFrame() { }
 

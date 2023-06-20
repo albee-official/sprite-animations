@@ -3,25 +3,26 @@ using System;
 
 namespace SpriteAnimations.Actions
 {
-    public interface ISpriteAnimationActionData { }
+    [Serializable]
+    public abstract class SpriteAnimationActionData { }
 
     [Serializable]
-    public class DefaultActionData : ISpriteAnimationActionData {
+    public class DefaultActionData : SpriteAnimationActionData {
         [SerializeField] public string Value = "";
     }
 
     [Serializable]
-    public class IntegerActionData : ISpriteAnimationActionData {
+    public class IntegerActionData : SpriteAnimationActionData {
         [SerializeField] public int Value = 0;
     }
 
     [Serializable]
-    public class FloatActionData : ISpriteAnimationActionData {
+    public class FloatActionData : SpriteAnimationActionData {
         [SerializeField] public float Value = 0;
     }
 
     [Serializable]
-    public class Range01ActionData : ISpriteAnimationActionData {
+    public class Range01ActionData : SpriteAnimationActionData {
         [SerializeField] [Range(0f, 1f)] public float Value = 0;
     }
 }

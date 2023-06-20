@@ -22,6 +22,7 @@ namespace SpriteAnimations
         
         [field: Header("Animation Info")]
         [field: Space(6f)] [SerializeField] protected string _Name = "Unknown Animation";
+        [field: Space(6f)] [SerializeField] protected bool pointingRight = false;
         [field: Space(2f)] [SerializeField] [Range(1, 60)] protected int fps = 10;
         [field: Space(2f)] [SerializeField] protected ESpriteAnimationPlaybackModes playbackMode = ESpriteAnimationPlaybackModes.SINGLE;
 
@@ -36,6 +37,7 @@ namespace SpriteAnimations
 
         public string Name { get { return _Name; } }
         public int CurrentFrameIndex { get { return _currentFrameIndex; } }
+        public bool PointingRight { get { return pointingRight; } }
         public int FPS { get { return fps; } }
         public ESpriteAnimationPlaybackModes PlaybackMode { get { return playbackMode; } }
         public ISpriteAnimationFrame[] Frames { get { return frames; } }

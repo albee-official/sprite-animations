@@ -27,8 +27,14 @@ namespace SpriteAnimations.Inspector
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float sz = EditorGUI.GetPropertyHeight(property, includeChildren: true);
+            
+            sz += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("sprite"));
+            sz += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("action"));
+            sz += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("actionDataType"));
+            sz += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("data"), includeChildren: true);
+
             // return Mathf.Max(childPropertiesHeight + SPACING * 6, SIZE) + MARGIN * 2;
-            return sz;
+            return Math.Max(sz, SIZE) + PADDING * 2;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -43,7 +49,7 @@ namespace SpriteAnimations.Inspector
             SerializedProperty dataProp = property.FindPropertyRelative("data");
 
             TypeReference typeRef = actionDataTypeProp.managedReferenceValue as TypeReference;
-            ISpriteAnimationActionData actionData = dataProp.managedReferenceValue as ISpriteAnimationActionData;
+            SpriteAnimationActionData actionData = dataProp.managedReferenceValue as SpriteAnimationActionData;
 
             if (typeRef == null || typeRef.ToString() == "None") actionDataTypeProp.managedReferenceValue = new TypeReference(typeof(SpriteAnimations.Actions.DefaultActionData));
             if (actionData == null || actionData.GetType() != typeRef.Type) {
@@ -75,13 +81,18 @@ namespace SpriteAnimations.Inspector
             EditorGUI.PropertyField(pos, actionProp);
 
             if (actionProp.enumValueIndex == 2) {
-                pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
-                pos.height = LEFT_PROPERTY_HEIGHT;
-                EditorGUI.PropertyField(pos, actionDataTypeProp, GUIContent.none);
+                // try displaying them but we can't know for sure they will
+                try {
+                    pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
+                    pos.height = LEFT_PROPERTY_HEIGHT;
+                    EditorGUI.PropertyField(pos, actionDataTypeProp, GUIContent.none);
 
-                pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
-                pos.height = LEFT_PROPERTY_HEIGHT;
-                EditorGUI.PropertyField(pos, dataProp, includeChildren: true);
+                    pos.y += SPACING + LEFT_PROPERTY_HEIGHT;
+                    pos.height = LEFT_PROPERTY_HEIGHT;
+                    EditorGUI.PropertyField(pos, dataProp, includeChildren: true);
+
+                }
+                catch (System.Exception) { }
             }
 
             return pos;
